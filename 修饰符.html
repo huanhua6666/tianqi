@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!-- stop修饰符阻止冒泡事件向上传递 -->
+              <div class="btnParent" @click="clickParent">
+	      <button type="button" @click.stop="clickEvent">点击2</button>
+		  
+		  <form action="" method="post">
+			  <!-- 绑定输入框回车事件 -->
+		  	<input type="text"  @keydown.enter.f1="searchWeather" name="username"  v-model="city"  id="" value="" />
+			<!-- 阻止默认事件 -->
+			<input   @click.prevent="searchWeather"   type="submit" value="提交" />
+		  </form>
+		  <div id="weather">
+		  	<h2>{{tmp}}</h2>
+			<h3>{{brief}}</h3>
+		  </div>
+</div>
+		</div>
+		<script type="text/javascript">
+		Vue.config.keyCodes.f1=112
+			let app =new Vue({
+				el:"#app",
+				data:{
+					count:0,
+					city:"广州",
+					tmp:"",
+					brief:""
+				},
+				methods:{
+					clickEvent:function(event){
+						 console.log("clickEvent")
+					},
+					clickParent:function(){
+						console.log("clickParent")
+					},
+					searchWeather:async function(){
+						console.log("查询天气")
+						console.log(this.city)
+						let httpUrl=`https://free-api.heweather.net/s6/weather/now?location=${this.city}&key=0464783dfb274ed68b8f80f7d8cda492`
+						let res =await fetch(httpUrl)
+						let result=await res.json()
+						console.log(result)
+						let now=result.HeWeather6[0].now
+						this.tmp=now.tmp
+						this.brief=now.cond_txt
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
